@@ -18,7 +18,10 @@ An example dataset produced by this package can be found [here](https://www.drop
 To use this package use the node `radlocc_collect` to save the calibration data, as follows:
 
 ```
-rosrun radlocc_calibration radlocc_collect laserscan:=/laserscan image:=/camera/image_raw _output_dir:=~/radlocc_data_001
+rosrun radlocc_calibration radlocc_collect \
+    laserscan:=/laserscan \
+    image:=/camera/image_raw \
+    _output_dir:=~/radlocc_data_001
 ```
 
 This node is interactive, so a user input (enter) is required to save each image/laserscan. When finished, write `q` and enter to exit.
