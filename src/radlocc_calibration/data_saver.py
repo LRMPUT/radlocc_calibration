@@ -3,6 +3,7 @@ import os
 import cv2
 from cv_bridge import CvBridge
 
+
 class DataSaver(object):
     """
     The data saver for Radlocc.
@@ -91,8 +92,8 @@ class DataSaver(object):
                     scan['range_unit_type'],
                     len(ranges)
                 ]
-                row = ' '.join(list(map(str, header))) + ' ' + \
-                    ' '.join(list(map(str, ranges))) + '\n'
+                row = ' '.join([str(h) for h in header]) + ' ' + \
+                    ' '.join([str(r) for r in ranges]) + '\n'
 
                 laser_file.write(row)
 
