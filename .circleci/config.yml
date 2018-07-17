@@ -6,16 +6,27 @@ jobs:
         environment:
           BASH_ENV: "/ros_entrypoint.sh"
     steps:
-      - checkout
       - run:
           name: Install dependencies
-          command: apt update && apt install -y pylint
+          command: apt update && apt install -y ssh pylint python-bloom dh-autoreconf
+      - checkout
       - run:
           name: Linting
           command: pylint --disable=R,C --extension-pkg-whitelist=cv2 src/radlocc_calibration > /tmp/pylint-report.txt
       - store_artifacts:
           path: /tmp/pylint-report.txt
           destination: pylint-report.txt
+      - run:
+          name: Generating debian config
+          command: bloom-generate rosdebian
+      - run:
+          name: Building debian package configurations
+          command: debian/rules binary
+      - run:
+          name: Package .deb file
+          command: mkdir /tmp/debpackage ; dh_builddeb --destdir=/tmp/debpackage
+      - store_artifacts:
+          path: /tmp/debpackage
       
 workflows:
   version: 2
