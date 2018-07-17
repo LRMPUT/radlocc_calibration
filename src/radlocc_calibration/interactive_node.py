@@ -1,6 +1,7 @@
 from __future__ import print_function
 
-from collect_node import CollectNode
+from radlocc_calibration.collect_node import CollectNode
+
 
 class InteractiveNode(CollectNode):
 
@@ -17,6 +18,3 @@ class InteractiveNode(CollectNode):
             self.finish()
         except KeyboardInterrupt:
             print("cancelled")
-            
-
-    

@@ -5,9 +5,6 @@ import rospy
 
 from sensor_msgs.msg import Image, LaserScan
 
-from data_saver import DataSaver
-
-
 class CollectNode:
 
     def __init__(self, image_topic, laserscan_topic, data_saver):
@@ -26,7 +23,7 @@ class CollectNode:
 
         self._data_saver = data_saver
 
-    def run(self, pan_range=None):
+    def run(self):
         self.capture_laser(True)
         self.capture_image()
         self.capture_laser(False)
