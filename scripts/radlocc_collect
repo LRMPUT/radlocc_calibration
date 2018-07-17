@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+import rospy
+
+IMAGE_TOPIC = 'image'
+LASERSCAN_TOPIC = 'laserscan'
+
+from radlocc_calibration import InteractiveNode, DataSaver
+
+if __name__ == '__main__':
+
+    rospy.init_node('radlocc_collect')
+
+    output_dir = rospy.get_param('~output_dir')
+
+    ds = DataSaver(output_dir)
+
+    node = InteractiveNode(data_saver=ds, image_topic=IMAGE_TOPIC, laserscan_topic=LASERSCAN_TOPIC)
+
+    node.start()
