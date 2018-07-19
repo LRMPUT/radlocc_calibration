@@ -2,10 +2,11 @@
 
 import rospy
 
+from radlocc_calibration import InteractiveNode, DataSaver
+
 IMAGE_TOPIC = 'image'
 LASERSCAN_TOPIC = 'laserscan'
 
-from radlocc_calibration import InteractiveNode, DataSaver
 
 if __name__ == '__main__':
 

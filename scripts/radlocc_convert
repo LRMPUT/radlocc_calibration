@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+
+"""Converts the results from MATLAB to the ROS transformation convention"""
+
+import argparse
+
+import numpy as np
+
+
+def load_results(filename):
+    from scipy.io import loadmat
+    return loadmat(filename)
+
+
+def get_xyz(results):
+    return results['delta'].reshape(3) * (np.array([-1, -1, 1]))
+
+
+def get_rpy(results):
+    from tf.transformations import euler_from_matrix, euler_matrix
+    rot = np.array(results['phi'])
+    prerot = euler_matrix(np.pi/2, 0, np.pi/2)[0:3, 0:3]
+    euler = euler_from_matrix(prerot.dot(rot))
+    return -1 * np.array(euler)
+
+
+def format_tf(format, xyz, rpy):
+    if format == 'xacro':
+        return format_tf_as_xacro(xyz, rpy)
+    elif format == 'yaml':
+        return format_tf_as_yaml(xyz, rpy)
+    else:
+        raise NotImplementedError('format not implemented')
+
+
+def format_tf_as_xacro(xyz, rpy):
+    return """<origin
+    xyz="{xyz}"
+    rpy="{rpy}" />""" \
+        .format(
+        xyz=np.array2string(xyz, precision=5)[1:-1],
+        rpy=np.array2string(rpy, precision=5)[1:-1])
+
+
+def format_tf_as_yaml(xyz, rpy):
+    return """xyz: {xyz}\nrpy: {rpy}""" \
+        .format(
+            xyz=np.array2string(xyz, precision=5, separator=', '),
+            rpy=np.array2string(rpy, precision=5, separator=', '))
+
+if __name__ == '__main__':
+    from os.path import join
+
+    parser = argparse.ArgumentParser(
+        description="Converts the results from MATLAB to the ROS transformation convention")
+    parser.add_argument('calibration_dir',
+                        type=str,
+                        help="calibration folder\nshould contain file called 'LaserCalibResults.mat'")
+    parser.add_argument(
+        '--format',
+        type=str,
+        choices=['xacro', 'yaml'],
+        required=True)
+
+    args = parser.parse_args()
+
+    try:
+        results = load_results(
+            join(args.calibration_dir, 'LaserCalibResults.mat'))
+    except IOError:
+        print("no LaserCalibResults.mat found in that path.\nDid you run the calibration?")
+        exit(0)
+
+    xyz = get_xyz(results)
+    rpy = get_rpy(results)
+    print(format_tf(args.format, xyz, rpy))

@@ -162,6 +162,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
   scripts/radlocc_collect
+  scripts/radlocc_convert
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
