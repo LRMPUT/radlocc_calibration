@@ -13,15 +13,17 @@ def load_results(filename):
 
 
 def get_xyz(results):
-    return results['delta'].reshape(3) * (np.array([-1, -1, 1]))
+    return results['delta'].reshape(3)
 
 
 def get_rpy(results):
     from tf.transformations import euler_from_matrix, euler_matrix
-    rot = np.array(results['phi'])
-    prerot = euler_matrix(np.pi/2, 0, np.pi/2)[0:3, 0:3]
-    euler = euler_from_matrix(prerot.dot(rot))
-    return -1 * np.array(euler)
+    P = np.array(results['phi']).T
+    T = euler_matrix(np.pi/2, 0, np.pi/2)[0:3, 0:3]
+    T = T.T
+    P_ = P.dot(T)
+    euler = euler_from_matrix(P_)
+    return np.array(euler)
 
 
 def format_tf(format, xyz, rpy):
