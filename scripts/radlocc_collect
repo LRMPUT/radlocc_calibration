@@ -5,7 +5,7 @@ import rospy
 from radlocc_calibration import InteractiveNode, DataSaver
 
 IMAGE_TOPIC = 'image'
-LASERSCAN_TOPIC = 'laserscan'
+LASERSCAN_TOPIC = '/velodyne_points'
 
 
 if __name__ == '__main__':

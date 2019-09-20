@@ -95,16 +95,18 @@ class DataSaver(object):
         """
 
         stamp = laserscan.header.stamp
-        scan = pc2.read_points(laserscan, field_names={'x', 'y', 'z'})
+        scan = pc2.read_points(laserscan, field_names={'x', 'y', 'z', 'ring'})
         pts_up = []
         pts_down = []
         for cur_pt in scan:
-            ang = np.arctan2(cur_pt['x'], cur_pt['y'])
-            cur_pt_aug = {'pt': np.array([cur_pt['x'], cur_pt['y'], cur_pt['z']]),
+            ang = np.arctan2(cur_pt[0], cur_pt[1])
+            cur_pt_aug = {'pt': np.array([cur_pt[0], cur_pt[1], cur_pt[2]]),
                           'ang': ang}
-            if cur_pt['z'] >= 0.0:
+            # 1 deg
+            if cur_pt[3] == 1:
                 pts_up.append(cur_pt_aug)
-            else:
+            # -1 deg
+            elif cur_pt[3] == 14:
                 pts_down.append(cur_pt_aug)
         pts_up.sort(key=lambda cur_pt: cur_pt['ang'])
         pts_down.sort(key=lambda cur_pt: cur_pt['ang'])

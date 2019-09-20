@@ -3,7 +3,7 @@ from time import sleep
 
 import rospy
 
-from sensor_msgs.msg import Image, LaserScan
+from sensor_msgs.msg import Image, LaserScan, PointCloud2
 
 class CollectNode:
 
@@ -18,8 +18,10 @@ class CollectNode:
 
         self._image_subscriber = rospy.Subscriber(
             image_topic, Image, callback=self.image_callback, queue_size=10)
+        # self._laserscan_subscriber = rospy.Subscriber(
+        #     laserscan_topic, LaserScan, callback=self.laser_callback, queue_size=10)
         self._laserscan_subscriber = rospy.Subscriber(
-            laserscan_topic, LaserScan, callback=self.laser_callback, queue_size=10)
+                laserscan_topic, PointCloud2, callback=self.laser_callback, queue_size=10)
 
         self._data_saver = data_saver
 
